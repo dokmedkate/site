@@ -145,6 +145,16 @@
             padding: 0.5rem 0;
         }
 
+        nav.scrolled .nav-container {
+            padding: 0 2rem;
+        }
+
+        @media (max-width: 768px) {
+            nav.scrolled .nav-container {
+                padding: 0 1rem;
+            }
+        }
+
         .nav-container {
             max-width: 1200px;
             margin: 0 auto;
@@ -154,12 +164,24 @@
             align-items: center;
             gap: 1rem;
             position: relative;
+            box-sizing: border-box;
         }
 
         .nav-right {
             display: flex;
             align-items: center;
-            gap: 1rem;
+            gap: 0.75rem;
+            flex-shrink: 0;
+        }
+
+        @media (max-width: 768px) {
+            .nav-container {
+                padding: 0 1rem;
+            }
+
+            .nav-right {
+                gap: 0.5rem;
+            }
         }
 
         .logo {
@@ -234,42 +256,68 @@
             display: none;
             flex-direction: column;
             cursor: pointer;
-            gap: 5px;
+            gap: 4px;
             padding: 0.5rem;
-            margin-left: -0.5rem; /* Сдвигаем немного влево */
+            background: transparent;
+            border: none;
+            position: relative;
+            width: 32px;
+            height: 32px;
+            justify-content: center;
+            align-items: center;
+            -webkit-tap-highlight-color: transparent;
         }
 
         .menu-toggle span {
-            width: 25px;
-            height: 3px;
+            width: 22px;
+            height: 2.5px;
             background: var(--text-dark);
-            border-radius: 3px;
-            transition: all 0.3s ease;
+            border-radius: 2px;
+            transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            display: block;
+            position: absolute;
+        }
+
+        .menu-toggle span:nth-child(1) {
+            top: 8px;
+        }
+
+        .menu-toggle span:nth-child(2) {
+            top: 50%;
+            transform: translateY(-50%);
+        }
+
+        .menu-toggle span:nth-child(3) {
+            bottom: 8px;
         }
 
         [data-theme="dark"] .menu-toggle span {
-            background: #e5e7eb; /* Более контрастный серый для темной темы */
-        }
-
-        [data-theme="dark"] .menu-toggle:hover span {
-            background: #f3f4f6; /* Еще светлее при наведении */
-        }
-
-        /* Активное состояние меню в темной теме */
-        [data-theme="dark"] .menu-toggle.active span {
             background: #e5e7eb;
         }
 
+        [data-theme="dark"] .menu-toggle:active span {
+            background: #f3f4f6;
+        }
+
+        /* Активное состояние меню */
         .menu-toggle.active span:nth-child(1) {
-            transform: rotate(45deg) translate(8px, 8px);
+            top: 50%;
+            transform: translateY(-50%) rotate(45deg);
         }
 
         .menu-toggle.active span:nth-child(2) {
             opacity: 0;
+            transform: translateY(-50%) scale(0);
         }
 
         .menu-toggle.active span:nth-child(3) {
-            transform: rotate(-45deg) translate(7px, -7px);
+            bottom: auto;
+            top: 50%;
+            transform: translateY(-50%) rotate(-45deg);
+        }
+
+        [data-theme="dark"] .menu-toggle.active span {
+            background: #e5e7eb;
         }
 
         /* Hero Section */
@@ -944,18 +992,20 @@
                 background: transparent;
                 border: 2px solid var(--primary-color);
                 border-radius: 50%;
-                width: 40px;
-                height: 40px;
+                width: 36px;
+                height: 36px;
                 padding: 0;
                 cursor: pointer;
-                font-size: 1.2rem;
+                font-size: 1.1rem;
                 transition: all 0.3s ease;
-                margin-left: 0.5rem;
+                margin-left: 0;
+                flex-shrink: 0;
+                -webkit-tap-highlight-color: transparent;
             }
 
-            .nav-theme-toggle:hover {
+            .nav-theme-toggle:active {
                 background: var(--bg-light);
-                transform: scale(1.1);
+                transform: scale(0.95);
             }
 
             [data-theme="dark"] .nav-theme-toggle {
