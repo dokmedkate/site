@@ -45,6 +45,15 @@
             background-color: var(--bg-white);
             overflow-x: hidden;
             transition: background-color 0.3s ease, color 0.3s ease;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        /* Telegram WebView optimizations */
+        @supports (-webkit-touch-callout: none) {
+            body {
+                -webkit-overflow-scrolling: touch;
+            }
         }
 
         html {
@@ -53,39 +62,26 @@
 
         /* Theme Toggle */
         .theme-toggle {
-            position: fixed;
-            top: 1rem;
-            right: 1rem;
-            z-index: 1001;
-            background: var(--bg-white);
-            border: 2px solid var(--primary-color);
-            border-radius: 50px;
-            padding: 0.5rem 1rem;
+            background: transparent;
+            border: none;
             cursor: pointer;
             display: flex;
             align-items: center;
             gap: 0.5rem;
             font-size: 1rem;
-            box-shadow: var(--shadow);
             transition: all 0.3s ease;
             color: var(--text-dark);
-        }
-
-        [data-theme="dark"] .theme-toggle {
-            background: #1f2937;
-            border-color: var(--primary-color);
-            color: var(--text-dark);
-        }
-
-        @media (min-width: 769px) {
-            .theme-toggle {
-                top: 6rem;
-            }
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            margin-left: auto;
         }
 
         .theme-toggle:hover {
-            transform: scale(1.05);
-            box-shadow: var(--shadow-lg);
+            background: var(--bg-light);
+        }
+
+        .theme-toggle-icon {
+            font-size: 1.2rem;
         }
 
         /* Navigation */
@@ -116,6 +112,7 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
+            gap: 1rem;
         }
 
         .logo {
@@ -130,6 +127,7 @@
             display: flex;
             list-style: none;
             gap: 2rem;
+            align-items: center;
         }
 
         .nav-links a {
@@ -191,12 +189,14 @@
         /* Hero Section */
         .hero {
             min-height: 100vh;
+            min-height: -webkit-fill-available; /* Для мобильных браузеров */
             display: flex;
             align-items: center;
             justify-content: center;
             position: relative;
             overflow: hidden;
             padding-top: 80px;
+            padding-bottom: 2rem;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
         }
 
@@ -282,6 +282,29 @@
         section {
             padding: 5rem 2rem;
             transition: background-color 0.3s ease;
+            position: relative;
+        }
+
+        /* Улучшение для Telegram WebView */
+        @media (max-width: 768px) {
+            section {
+                padding: 3rem 1rem;
+                min-height: auto;
+            }
+
+            html {
+                -webkit-text-size-adjust: 100%;
+                -ms-text-size-adjust: 100%;
+            }
+
+            img {
+                max-width: 100%;
+                height: auto;
+            }
+
+            * {
+                -webkit-tap-highlight-color: rgba(0, 0, 0, 0.1);
+            }
         }
 
         .container {
@@ -882,6 +905,19 @@
                 display: none;
             }
 
+            .theme-toggle {
+                width: 100%;
+                margin-left: 0;
+                padding: 1rem 2rem;
+                border-top: 1px solid var(--bg-light);
+                border-radius: 0;
+                justify-content: flex-start;
+            }
+
+            .theme-toggle:hover {
+                background: var(--bg-light);
+            }
+
             /* Hero Section */
             .hero {
                 min-height: 100vh;
@@ -957,17 +993,7 @@
                 font-size: 1.2rem;
             }
 
-            /* Theme Toggle */
-            .theme-toggle {
-                top: 1rem;
-                right: 1rem;
-                padding: 0.4rem 0.8rem;
-                font-size: 0.85rem;
-            }
-
-            .theme-toggle span:last-child {
-                display: none;
-            }
+            /* Theme Toggle - уже в навигации */
 
             /* Modal */
             .modal {
