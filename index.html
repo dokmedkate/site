@@ -65,7 +65,7 @@
             position: fixed;
             bottom: 2rem;
             right: 2rem;
-            z-index: 998;
+            z-index: 1000;
             background: var(--bg-white);
             border: 2px solid var(--primary-color);
             border-radius: 50px;
@@ -81,6 +81,13 @@
             color: var(--text-dark);
             min-width: 50px;
             min-height: 50px;
+        }
+
+        /* Показываем переключатель темы на десктопе */
+        @media (min-width: 769px) {
+            .theme-toggle {
+                display: flex !important;
+            }
         }
 
         [data-theme="dark"] .theme-toggle {
@@ -99,6 +106,11 @@
 
         .theme-toggle-text {
             display: inline;
+        }
+
+        /* Переключатель темы в навигации для мобильных */
+        .nav-theme-toggle {
+            display: none;
         }
 
         /* Navigation */
@@ -128,6 +140,13 @@
             padding: 0 2rem;
             display: flex;
             justify-content: space-between;
+            align-items: center;
+            gap: 1rem;
+            position: relative;
+        }
+
+        .nav-right {
+            display: flex;
             align-items: center;
             gap: 1rem;
         }
@@ -181,6 +200,7 @@
             cursor: pointer;
             gap: 5px;
             padding: 0.5rem;
+            margin-left: -0.5rem; /* Сдвигаем немного влево */
         }
 
         .menu-toggle span {
@@ -863,27 +883,44 @@
 
         /* Расположение кнопок на мобильных */
         @media (max-width: 768px) {
+            /* Переключатель темы в навигации */
             .theme-toggle {
-                bottom: 1rem;
-                right: 1rem;
-                padding: 0.75rem;
-                min-width: 50px;
-                min-height: 50px;
+                display: none; /* Скрываем фиксированный переключатель */
+            }
+
+            .nav-theme-toggle {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                background: transparent;
+                border: 2px solid var(--primary-color);
                 border-radius: 50%;
+                width: 40px;
+                height: 40px;
+                padding: 0;
+                cursor: pointer;
+                font-size: 1.2rem;
+                transition: all 0.3s ease;
+                margin-left: 0.5rem;
+            }
+
+            .nav-theme-toggle:hover {
+                background: var(--bg-light);
+                transform: scale(1.1);
+            }
+
+            [data-theme="dark"] .nav-theme-toggle {
+                border-color: var(--primary-color);
             }
 
             .scroll-to-top {
-                bottom: 6rem; /* Выше переключателя темы */
+                bottom: 1rem;
                 right: 1rem;
             }
 
             .share-button {
                 bottom: 1rem;
                 left: 1rem;
-            }
-
-            .theme-toggle-text {
-                display: none;
             }
         }
 
@@ -1151,11 +1188,16 @@
     <nav id="navbar">
         <div class="nav-container">
             <a href="#home" class="logo">👩‍⚕️ Доктор Катя</a>
-            <button class="menu-toggle" id="menuToggle" aria-label="Меню">
-                <span></span>
-                <span></span>
-                <span></span>
-            </button>
+            <div class="nav-right">
+                <button class="menu-toggle" id="menuToggle" aria-label="Меню">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </button>
+                <button class="nav-theme-toggle" id="navThemeToggle" aria-label="Переключить тему">
+                    <span class="theme-toggle-icon" id="navThemeIcon">🌙</span>
+                </button>
+            </div>
             <ul class="nav-links" id="navLinks">
                 <li><a href="#home">Главная</a></li>
                 <li><a href="#about">О себе</a></li>
@@ -1605,7 +1647,9 @@
     <script>
         // Theme Toggle
         const themeToggle = document.getElementById('themeToggle');
+        const navThemeToggle = document.getElementById('navThemeToggle');
         const themeIcon = document.getElementById('themeIcon');
+        const navThemeIcon = document.getElementById('navThemeIcon');
         const themeText = document.getElementById('themeText');
         const body = document.body;
 
@@ -1614,22 +1658,29 @@
         body.setAttribute('data-theme', currentTheme);
         updateThemeIcon(currentTheme);
 
-        themeToggle.addEventListener('click', () => {
+        function toggleTheme() {
             const currentTheme = body.getAttribute('data-theme');
             const newTheme = currentTheme === 'light' ? 'dark' : 'light';
             body.setAttribute('data-theme', newTheme);
             localStorage.setItem('theme', newTheme);
             updateThemeIcon(newTheme);
-        });
+        }
+
+        themeToggle.addEventListener('click', toggleTheme);
+        if (navThemeToggle) {
+            navThemeToggle.addEventListener('click', toggleTheme);
+        }
 
         function updateThemeIcon(theme) {
             // Показываем текущую тему (не следующую)
             if (theme === 'dark') {
-                themeIcon.textContent = '🌙';
-                themeText.textContent = 'Тёмная';
+                if (themeIcon) themeIcon.textContent = '🌙';
+                if (navThemeIcon) navThemeIcon.textContent = '🌙';
+                if (themeText) themeText.textContent = 'Тёмная';
             } else {
-                themeIcon.textContent = '☀️';
-                themeText.textContent = 'Светлая';
+                if (themeIcon) themeIcon.textContent = '☀️';
+                if (navThemeIcon) navThemeIcon.textContent = '☀️';
+                if (themeText) themeText.textContent = 'Светлая';
             }
         }
 
