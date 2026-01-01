@@ -684,7 +684,7 @@
             font-size: 2rem;
             font-weight: bold;
             cursor: pointer;
-            transition: color 0.3s ease;
+            transition: color 0.3s ease, background 0.3s ease;
             width: 40px;
             height: 40px;
             display: flex;
@@ -692,11 +692,50 @@
             justify-content: center;
             border-radius: 50%;
             background: var(--bg-light);
+            z-index: 10;
         }
 
         .close:hover {
             color: var(--text-dark);
             background: var(--text-light);
+        }
+
+        .close:active {
+            transform: scale(0.9);
+        }
+
+        /* Кнопка закрытия внизу для мобильных */
+        .modal-close-bottom {
+            display: none;
+            width: 100%;
+            padding: 1rem;
+            margin-top: 1.5rem;
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        /* На десктопе контент без обертки */
+        @media (min-width: 769px) {
+            .modal-content-inner {
+                display: block;
+            }
+        }
+
+        .modal-close-bottom:hover {
+            background: var(--accent-color);
+            transform: translateY(-2px);
+        }
+
+        .modal-close-bottom:active {
+            transform: translateY(0);
         }
 
         .modal-content h2 {
@@ -1166,16 +1205,53 @@
             .modal-content {
                 padding: 1.5rem;
                 margin: 0;
-                max-height: 85vh;
+                max-height: 90vh;
                 border-radius: 15px;
+                display: flex;
+                flex-direction: column;
             }
 
             .modal-content h2 {
                 font-size: 1.5rem;
+                margin-top: 0.5rem;
             }
 
             .modal-content p {
                 font-size: 0.95rem;
+            }
+
+            .close {
+                top: 0.5rem;
+                right: 0.5rem;
+                width: 36px;
+                height: 36px;
+                font-size: 1.5rem;
+            }
+
+            .modal-close-bottom {
+                display: block;
+            }
+
+            /* Контент с прокруткой */
+            .modal-content-inner {
+                flex: 1;
+                overflow-y: auto;
+                -webkit-overflow-scrolling: touch;
+                padding-right: 0.5rem;
+            }
+
+            .modal-content-inner::-webkit-scrollbar {
+                width: 4px;
+            }
+
+            .modal-content-inner::-webkit-scrollbar-track {
+                background: var(--bg-light);
+                border-radius: 2px;
+            }
+
+            .modal-content-inner::-webkit-scrollbar-thumb {
+                background: var(--text-light);
+                border-radius: 2px;
             }
 
             /* Buttons */
@@ -1501,8 +1577,9 @@
     <div id="modal1" class="modal">
         <div class="modal-content">
             <span class="close" onclick="closeModal('modal1')">&times;</span>
-            <h2>Детские книги и развитие внимания</h2>
-            <p>
+            <div class="modal-content-inner">
+                <h2>Детские книги и развитие внимания</h2>
+                <p>
                 Выбор правильных книг для детей — это не просто развлечение, а важный инструмент 
                 развития внимания, памяти и воображения. В современном мире, где дети окружены 
                 множеством отвлекающих факторов, книги помогают тренировать способность 
@@ -1525,13 +1602,16 @@
                 чем час раз в неделю. Создайте ритуал чтения перед сном — это не только развивает 
                 внимание, но и укрепляет связь между родителями и детьми.
             </p>
+            </div>
+            <button class="modal-close-bottom" onclick="closeModal('modal1')">Закрыть</button>
         </div>
     </div>
 
     <div id="modal2" class="modal">
         <div class="modal-content">
             <span class="close" onclick="closeModal('modal2')">&times;</span>
-            <h2>Температура у ребёнка: когда бить тревогу?</h2>
+            <div class="modal-content-inner">
+                <h2>Температура у ребёнка: когда бить тревогу?</h2>
             <p>
                 Повышенная температура у ребёнка — это защитная реакция организма на инфекцию. 
                 В большинстве случаев это нормальный процесс, который помогает иммунной системе 
@@ -1558,13 +1638,16 @@
                 Используйте жаропонижающие средства (парацетамол или ибупрофен) согласно инструкции 
                 и возрасту ребёнка. Никогда не используйте аспирин у детей до 12 лет!
             </p>
+            </div>
+            <button class="modal-close-bottom" onclick="closeModal('modal2')">Закрыть</button>
         </div>
     </div>
 
     <div id="modal3" class="modal">
         <div class="modal-content">
             <span class="close" onclick="closeModal('modal3')">&times;</span>
-            <h2>Уход за зубами с первых дней</h2>
+            <div class="modal-content-inner">
+                <h2>Уход за зубами с первых дней</h2>
             <p>
                 Здоровье молочных зубов напрямую влияет на здоровье постоянных зубов. 
                 Правильный уход за полостью рта нужно начинать ещё до появления первого зуба.
@@ -1593,13 +1676,16 @@
                 Помните: молочные зубы нужно лечить! Кариес молочных зубов может повредить 
                 зачатки постоянных зубов и привести к проблемам в будущем.
             </p>
+            </div>
+            <button class="modal-close-bottom" onclick="closeModal('modal3')">Закрыть</button>
         </div>
     </div>
 
     <div id="modal4" class="modal">
         <div class="modal-content">
             <span class="close" onclick="closeModal('modal4')">&times;</span>
-            <h2>Иммунитет ребёнка: мифы и реальность</h2>
+            <div class="modal-content-inner">
+                <h2>Иммунитет ребёнка: мифы и реальность</h2>
             <p>
                 Вокруг детского иммунитета существует множество мифов. Разберём самые популярные 
                 и узнаем, как на самом деле работает защита организма ребёнка.
@@ -1631,13 +1717,16 @@
                 • Вакцинация согласно календарю прививок<br>
                 • Соблюдение правил гигиены
             </p>
+            </div>
+            <button class="modal-close-bottom" onclick="closeModal('modal4')">Закрыть</button>
         </div>
     </div>
 
     <div id="modal5" class="modal">
         <div class="modal-content">
             <span class="close" onclick="closeModal('modal5')">&times;</span>
-            <h2>Здоровый сон ребёнка</h2>
+            <div class="modal-content-inner">
+                <h2>Здоровый сон ребёнка</h2>
             <p>
                 Качественный сон — основа здоровья и правильного развития ребёнка. 
                 Во сне происходит рост, восстановление организма и консолидация памяти. 
@@ -1666,13 +1755,16 @@
                 • Ограничьте сладкое и кофеин (шоколад, кола) во второй половине дня<br>
                 • Если проблемы сохраняются, проконсультируйтесь с педиатром
             </p>
+            </div>
+            <button class="modal-close-bottom" onclick="closeModal('modal5')">Закрыть</button>
         </div>
     </div>
 
     <div id="modal6" class="modal">
         <div class="modal-content">
             <span class="close" onclick="closeModal('modal6')">&times;</span>
-            <h2>Отдых с детьми в Анапе</h2>
+            <div class="modal-content-inner">
+                <h2>Отдых с детьми в Анапе</h2>
             <p>
                 Анапа — прекрасное место для семейного отдыха с детьми. Мягкий климат, 
                 песчаные пляжи и неглубокое море делают его идеальным для малышей. 
@@ -1707,6 +1799,8 @@
                 постепенно вводя местные блюда. Избегайте уличной еды и незнакомых морепродуктов. 
                 Всегда мойте фрукты и овощи перед едой.
             </p>
+            </div>
+            <button class="modal-close-bottom" onclick="closeModal('modal6')">Закрыть</button>
         </div>
     </div>
 
