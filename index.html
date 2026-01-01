@@ -83,10 +83,21 @@
             min-height: 50px;
         }
 
-        /* Показываем переключатель темы на десктопе */
+        /* Скрываем фиксированный переключатель на десктопе */
         @media (min-width: 769px) {
             .theme-toggle {
+                display: none !important;
+            }
+
+            .nav-links .desktop-theme-toggle {
                 display: flex !important;
+            }
+        }
+
+        /* Скрываем переключатель темы в навигации на мобильных */
+        @media (max-width: 768px) {
+            .nav-links .desktop-theme-toggle {
+                display: none !important;
             }
         }
 
@@ -166,6 +177,31 @@
             align-items: center;
         }
 
+        /* Переключатель темы в навигации для десктопа */
+        .nav-links .desktop-theme-toggle {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: transparent;
+            border: 2px solid var(--primary-color);
+            border-radius: 50px;
+            padding: 0.5rem 1rem;
+            cursor: pointer;
+            font-size: 0.95rem;
+            transition: all 0.3s ease;
+            color: var(--text-dark);
+            margin-left: 0.5rem;
+        }
+
+        .nav-links .desktop-theme-toggle:hover {
+            background: var(--bg-light);
+            transform: scale(1.05);
+        }
+
+        [data-theme="dark"] .nav-links .desktop-theme-toggle {
+            border-color: var(--primary-color);
+        }
+
         .nav-links a {
             text-decoration: none;
             color: var(--text-dark);
@@ -209,6 +245,10 @@
             background: var(--text-dark);
             border-radius: 3px;
             transition: all 0.3s ease;
+        }
+
+        [data-theme="dark"] .menu-toggle span {
+            background: var(--text-dark);
         }
 
         .menu-toggle.active span:nth-child(1) {
@@ -1204,6 +1244,12 @@
                 <li><a href="#services">Просвещение</a></li>
                 <li><a href="#blog">Статьи</a></li>
                 <li><a href="#contact">Контакты</a></li>
+                <li>
+                    <button class="desktop-theme-toggle" id="desktopThemeToggle" aria-label="Переключить тему">
+                        <span class="theme-toggle-icon" id="desktopThemeIcon">🌙</span>
+                        <span class="theme-toggle-text" id="desktopThemeText">Тёмная</span>
+                    </button>
+                </li>
             </ul>
         </div>
     </nav>
@@ -1619,14 +1665,11 @@
                         <span>Анапа, Краснодарский край</span>
                     </div>
                     <div class="contact-item">
-                        <span class="contact-icon">📱</span>
-                        <span>Telegram: <a href="https://t.me/DokMedKate" target="_blank" style="color: white; text-decoration: underline; transition: opacity 0.3s ease;" onmouseover="this.style.opacity='0.8'" onmouseout="this.style.opacity='1'">@DokMedKate</a></span>
+                        <a href="https://t.me/DokMedKate" target="_blank" style="color: white; text-decoration: none; display: flex; align-items: center; gap: 0.5rem; transition: opacity 0.3s ease;" onmouseover="this.style.opacity='0.8'" onmouseout="this.style.opacity='1'">
+                            <span class="contact-icon">📱</span>
+                            <span>Telegram: @DokMedKate</span>
+                        </a>
                     </div>
-                </div>
-                <div class="social-links">
-                    <a href="https://t.me/DokMedKate" class="social-link" target="_blank" title="Telegram">
-                        📱
-                    </a>
                 </div>
             </div>
         </div>
@@ -1641,16 +1684,24 @@
     <footer>
         <p>&copy; 2026 Екатерина Ивченко. Все права защищены.</p>
         <p style="margin-top: 0.5rem; opacity: 0.8;">Педиатр | Просветительская деятельность | Анапа, Краснодарский край</p>
-        <p style="margin-top: 0.5rem; opacity: 0.7; font-size: 0.9rem;">Telegram: <a href="https://t.me/DokMedKate" target="_blank" style="color: white; text-decoration: underline; opacity: 0.9; transition: opacity 0.3s ease;" onmouseover="this.style.opacity='1'" onmouseout="this.style.opacity='0.9'">@DokMedKate</a></p>
+        <p style="margin-top: 0.5rem; opacity: 0.7; font-size: 0.9rem;">
+            <a href="https://t.me/DokMedKate" target="_blank" style="color: white; text-decoration: none; display: inline-flex; align-items: center; gap: 0.5rem; opacity: 0.9; transition: opacity 0.3s ease;" onmouseover="this.style.opacity='1'" onmouseout="this.style.opacity='0.9'">
+                <span>📱</span>
+                <span>Telegram: @DokMedKate</span>
+            </a>
+        </p>
     </footer>
 
     <script>
         // Theme Toggle
         const themeToggle = document.getElementById('themeToggle');
         const navThemeToggle = document.getElementById('navThemeToggle');
+        const desktopThemeToggle = document.getElementById('desktopThemeToggle');
         const themeIcon = document.getElementById('themeIcon');
         const navThemeIcon = document.getElementById('navThemeIcon');
+        const desktopThemeIcon = document.getElementById('desktopThemeIcon');
         const themeText = document.getElementById('themeText');
+        const desktopThemeText = document.getElementById('desktopThemeText');
         const body = document.body;
 
         // Check for saved theme preference or default to light mode
@@ -1666,9 +1717,14 @@
             updateThemeIcon(newTheme);
         }
 
-        themeToggle.addEventListener('click', toggleTheme);
+        if (themeToggle) {
+            themeToggle.addEventListener('click', toggleTheme);
+        }
         if (navThemeToggle) {
             navThemeToggle.addEventListener('click', toggleTheme);
+        }
+        if (desktopThemeToggle) {
+            desktopThemeToggle.addEventListener('click', toggleTheme);
         }
 
         function updateThemeIcon(theme) {
@@ -1676,11 +1732,15 @@
             if (theme === 'dark') {
                 if (themeIcon) themeIcon.textContent = '🌙';
                 if (navThemeIcon) navThemeIcon.textContent = '🌙';
+                if (desktopThemeIcon) desktopThemeIcon.textContent = '🌙';
                 if (themeText) themeText.textContent = 'Тёмная';
+                if (desktopThemeText) desktopThemeText.textContent = 'Тёмная';
             } else {
                 if (themeIcon) themeIcon.textContent = '☀️';
                 if (navThemeIcon) navThemeIcon.textContent = '☀️';
+                if (desktopThemeIcon) desktopThemeIcon.textContent = '☀️';
                 if (themeText) themeText.textContent = 'Светлая';
+                if (desktopThemeText) desktopThemeText.textContent = 'Светлая';
             }
         }
 
