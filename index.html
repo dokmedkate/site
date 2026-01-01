@@ -248,7 +248,16 @@
         }
 
         [data-theme="dark"] .menu-toggle span {
-            background: var(--text-dark);
+            background: #e5e7eb; /* Более контрастный серый для темной темы */
+        }
+
+        [data-theme="dark"] .menu-toggle:hover span {
+            background: #f3f4f6; /* Еще светлее при наведении */
+        }
+
+        /* Активное состояние меню в темной теме */
+        [data-theme="dark"] .menu-toggle.active span {
+            background: #e5e7eb;
         }
 
         .menu-toggle.active span:nth-child(1) {
