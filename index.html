@@ -192,7 +192,7 @@
 
         @media (max-width: 768px) {
             nav {
-                overflow: hidden;
+                overflow: visible;
                 width: 100%;
                 max-width: 100vw;
             }
@@ -203,6 +203,8 @@
                 min-width: 0;
                 width: 100%;
                 max-width: 100%;
+                overflow: visible;
+                position: relative;
             }
 
             .logo {
@@ -1149,16 +1151,20 @@
                 top: 70px;
                 left: 0;
                 right: 0;
+                width: 100%;
                 background: var(--bg-white);
                 flex-direction: column;
                 gap: 0;
                 padding: 1rem 0;
-                box-shadow: var(--shadow-lg);
+                box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
                 transform: translateY(-100%);
                 opacity: 0;
                 visibility: hidden;
-                transition: all 0.3s ease;
-                z-index: 999;
+                transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s ease, visibility 0.3s ease;
+                z-index: 1001;
+                max-height: calc(100vh - 70px);
+                overflow-y: auto;
+                -webkit-overflow-scrolling: touch;
             }
 
             .nav-links.active {
@@ -1179,6 +1185,21 @@
 
             .nav-links a::after {
                 display: none;
+            }
+
+            [data-theme="dark"] .nav-links {
+                background: #1f2937;
+                box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+            }
+
+            [data-theme="dark"] .nav-links a {
+                color: #e5e7eb;
+                border-bottom-color: #374151;
+            }
+
+            [data-theme="dark"] .nav-links a:hover {
+                background: #374151;
+                color: var(--primary-color);
             }
 
             /* Переключатель темы уже настроен выше */
@@ -1965,10 +1986,31 @@
         const navLinks = document.getElementById('navLinks');
 
         if (menuToggle && navLinks) {
+            let menuTimeout = null;
+
             menuToggle.addEventListener('click', function(e) {
                 e.stopPropagation(); // Предотвращаем всплытие события
+                e.preventDefault();
+                
+                const isActive = navLinks.classList.contains('active');
+                
+                if (menuTimeout) {
+                    clearTimeout(menuTimeout);
+                }
+                
                 menuToggle.classList.toggle('active');
                 navLinks.classList.toggle('active');
+                
+                // Небольшая задержка для предотвращения конфликтов
+                menuTimeout = setTimeout(() => {
+                    if (!isActive) {
+                        // Меню открылось - блокируем скролл body
+                        document.body.style.overflow = 'hidden';
+                    } else {
+                        // Меню закрылось - разблокируем скролл
+                        document.body.style.overflow = '';
+                    }
+                }, 50);
             });
 
             // Close mobile menu when clicking on a link
@@ -1976,18 +2018,22 @@
                 link.addEventListener('click', function() {
                     menuToggle.classList.remove('active');
                     navLinks.classList.remove('active');
+                    document.body.style.overflow = '';
                 });
             });
 
-            // Close mobile menu when clicking outside
+            // Close mobile menu when clicking outside (с задержкой для предотвращения конфликтов)
             document.addEventListener('click', function(e) {
                 if (navLinks.classList.contains('active')) {
                     if (!navLinks.contains(e.target) && !menuToggle.contains(e.target)) {
-                        menuToggle.classList.remove('active');
-                        navLinks.classList.remove('active');
+                        setTimeout(() => {
+                            menuToggle.classList.remove('active');
+                            navLinks.classList.remove('active');
+                            document.body.style.overflow = '';
+                        }, 10);
                     }
                 }
-            });
+            }, true); // Используем capture phase для более раннего перехвата
         }
 
         // Navbar scroll effect
